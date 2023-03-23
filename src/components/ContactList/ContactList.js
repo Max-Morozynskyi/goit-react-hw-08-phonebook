@@ -1,7 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
 import css from './ContactList.module.css';
-import { selectContacts, selectFilter, selectIsLoading } from 'redux/selectors';
-import { deleteContact, fetchContacts } from 'redux/operations';
+import {
+  selectContacts,
+  selectFilter,
+  selectIsLoading,
+} from 'redux/contacts/selectors';
+import { deleteContact, fetchContacts } from 'redux/contacts/operations';
 import { useEffect } from 'react';
 import BarLoader from 'react-spinners/BarLoader';
 
