@@ -1,0 +1,9 @@
+.navLink {
+  padding: 18px 15px;
+  margin: 0 5px;
+  text-decoration: none;
+  color: inherit;
+}
+.navLink:hover {
+  color: #969678;
+}
