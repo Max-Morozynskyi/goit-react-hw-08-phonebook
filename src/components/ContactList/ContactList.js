@@ -1,19 +1,14 @@
-import { useDispatch, useSelector } from 'react-redux';
-import css from './ContactList.module.css';
-import {
-  selectContacts,
-  selectFilter,
-  selectIsLoading,
-} from 'redux/contacts/selectors';
-import { deleteContact, fetchContacts } from 'redux/contacts/operations';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchContacts } from 'redux/contacts/operations';
+import { useContacts } from 'hooks';
+import css from './ContactList.module.css';
 import BarLoader from 'react-spinners/BarLoader';
+import { ContactItem } from 'components/ContactItem/ContactItem';
 
 export function ContactList() {
   const dispatch = useDispatch();
-  const filter = useSelector(selectFilter);
-  const contacts = useSelector(selectContacts);
-  const status = useSelector(selectIsLoading);
+  const { contacts, filter, isLoading, } = useContacts;
   useEffect(() => {
     dispatch(fetchContacts());
     // eslint-disable-next-line
@@ -23,7 +18,7 @@ export function ContactList() {
     <ul className={css.list}>
       <BarLoader
         color="brown"
-        loading={status}
+        loading={isLoading}
         size="50px"
         cssOverride={{
           position: 'absolute',
@@ -33,17 +28,9 @@ export function ContactList() {
       />
       {contacts
         .filter(item => item.name.toLowerCase().includes(filter.toLowerCase()))
-        .map(({ id, name, number }) => (
-          <li className={css.item} key={id}>
-            <span>{name}:</span> <span>{number}</span>
-            <button
-              className={css.deleteBtn}
-              onClick={() => dispatch(deleteContact(id))}
-            >
-              Delete
-            </button>
-          </li>
-        ))}
+        .map(({ id, name, number }) => {
+          <ContactItem id={id} name={name} number={number} />
+        })}
     </ul>
   );
 }

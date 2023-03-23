@@ -1,18 +1,31 @@
-import { ContactForm } from './ContactForm/ContactForm';
-import { ContactList } from './ContactList/ContactList';
-import { Filter } from './Filter/Filter';
-import { selectError } from 'redux/contacts/selectors';
+import { useAuth } from "hooks";
+import { lazy, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { Route, Routes } from "react-router-dom";
+import { refreshUser } from "redux/auth/operations";
+import { Layout } from "./Layout/Layout";
+import { RestrictedRoute } from "./RestrictedRoute";
+import { PrivateRoute } from "./PrivateRoute";
+
+const RegisterPage = lazy(() => import('../pages/Register'));
+const LoginPage = lazy(() => import('../pages/Login'));
+const PhonebookPage = lazy(() => import('../pages/Phonebook'));
 
 export const App = () => {
-  const errorMessage = useSelector(selectError);
-  return (
-    <>
-      <h1>Phonebook</h1>
-      {errorMessage && <p>{errorMessage}</p>}
-      <ContactForm />
-      <h2>Contacts</h2>
-      <Filter />
-      <ContactList />
-    </>
-  );
+  const dispatch = useDispatch();
+  const { isRefreshing } = useAuth();
+
+  useEffect(() => {
+    dispatch(refreshUser());
+  }, [dispatch])
+
+  return (isRefreshing ? <p>Refreshing user...</p> : (
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route path="/register" element={<RestrictedRoute redirectTo="/contacts" component={<RegisterPage />} />} />
+        <Route path="/login" element={<RestrictedRoute redirectTo="/contacts" component={<LoginPage />} />} />
+        <Route path="/contacts" element={<PrivateRoute redirectTo="/login" component={<PhonebookPage />} />} />
+      </Route>
+    </Routes>
+  ))
 };
