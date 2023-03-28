@@ -6,16 +6,25 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Link } from 'react-router-dom';
+import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useDispatch } from 'react-redux';
+import { login } from 'redux/auth/operations';
 
 export const LogInForm = () => {
+  const [showPassword, setShowPassword] = React.useState(false);
+  const dispatch = useDispatch();
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    dispatch(login({
       email: data.get('email'),
       password: data.get('password'),
-    });
+    }))
+
   };
 
   return (
@@ -32,7 +41,7 @@ export const LogInForm = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Log in
+          Login
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
@@ -45,16 +54,28 @@ export const LogInForm = () => {
             autoComplete="email"
             autoFocus
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
+          <FormControl fullWidth margin='normal' variant="outlined">
+            <InputLabel htmlFor="password">Password</InputLabel>
+            <OutlinedInput
+              required
+              name="password"
+              label="password"
+              type={showPassword ? 'text' : 'password'}
+              id="password"
+              autoComplete="user's password"
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
           <Button
             type="submit"
             fullWidth

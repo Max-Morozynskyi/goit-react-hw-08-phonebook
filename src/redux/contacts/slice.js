@@ -5,7 +5,7 @@ const initialContacts = {
   items: [],
   filter: '',
   isLoading: false,
-  error: null
+  error: null,
 };
 
 const handlePending = state => {

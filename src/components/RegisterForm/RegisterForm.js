@@ -6,16 +6,29 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Link } from 'react-router-dom';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { FormControl, InputLabel, OutlinedInput } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { register } from 'redux/auth/operations';
 
 export const RegisterForm = () => {
+  const [showPassword, setShowPassword] = React.useState(false);
+  const dispatch = useDispatch();
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    const registerData = {
+      name: data.get('name'),
       email: data.get('email'),
       password: data.get('password'),
-    });
+    }
+    dispatch(register(registerData))
   };
 
   return (
@@ -55,16 +68,28 @@ export const RegisterForm = () => {
             name="email"
             autoComplete="email"
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
+          <FormControl fullWidth margin='normal' variant="outlined">
+            <InputLabel htmlFor="password">Password</InputLabel>
+            <OutlinedInput
+              required
+              name="password"
+              label="password"
+              type={showPassword ? 'text' : 'password'}
+              id="password"
+              autoComplete="user's password"
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
           <Button
             type="submit"
             fullWidth
