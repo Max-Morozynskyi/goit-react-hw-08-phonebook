@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import toast from 'react-hot-toast';
 import { login, logout, refreshUser, register } from "./operations";
 
 const initialState = {
@@ -11,28 +12,30 @@ const initialState = {
   isRefreshing: false,
 };
 
+const handleRejected = (_, action) => {
+  const notify = (message) => toast.error(message);
+  notify(action.payload);
+}
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   extraReducers: (builder) => {
     builder
-      // .addCase(fetchContacts.pending, handlePending)
       .addCase(register.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.isLoggedIn = true;
       })
-      // .addCase(fetchContacts.rejected, handleRejected)
+      .addCase(register.rejected, handleRejected)
 
-      // .addCase(createContact.pending, handlePending)
       .addCase(login.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.isLoggedIn = true;
       })
-      // .addCase(createContact.rejected, handleRejected)
+      .addCase(login.rejected, handleRejected)
 
-      // .addCase(deleteContact.pending, handlePending)
       .addCase(logout.fulfilled, (state) => {
         state.user = {
           name: null,
@@ -41,7 +44,7 @@ const authSlice = createSlice({
         state.token = null;
         state.isLoggedIn = false;
       })
-      // .addCase(deleteContact.rejected, handleRejected)
+      .addCase(logout.rejected, handleRejected)
 
       .addCase(refreshUser.pending, (state) => {
         state.isRefreshing = true;

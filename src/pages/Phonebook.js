@@ -1,20 +1,14 @@
-import { ContactForm } from "components/ContactForm/ContactForm";
-import { ContactList } from "components/ContactList/ContactList";
+import { ContactsHeader } from "components/ContactsHeader/ContactsHeader";
 import { Filter } from "components/Filter/Filter";
-import { useAuth } from "hooks";
-import css from './Phonebook.module.css'
+import { ContactList } from "components/ContactList/ContactList";
 
 const Phonebook = () => {
-  const { user } = useAuth();
   return (
-    <div className={css.phonebook}>
-      <ContactForm />
-      <div>
-        <h2>Your personal contacts, {user.name}:</h2>
-        <Filter />
-        <ContactList />
-      </div>
-    </div>
+    <div style={{ marginTop: '100px' }}>
+      <ContactsHeader />
+      <Filter />
+      <ContactList />
+    </div >
   );
 }
 

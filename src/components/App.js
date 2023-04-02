@@ -6,13 +6,13 @@ import { refreshUser } from "redux/auth/operations";
 import { Layout } from "./Layout/Layout";
 import { RestrictedRoute } from "./RestrictedRoute";
 import { PrivateRoute } from "./PrivateRoute";
+import { Preloader } from "./Preloader/Preloader";
 
 const HomePage = lazy(() => import('../pages/Home'))
 const RegisterPage = lazy(() => import('../pages/Register'));
 const LoginPage = lazy(() => import('../pages/Login'));
 const PhonebookPage = lazy(() => import('../pages/Phonebook'));
 const ErrorPage = lazy(() => import('../pages/Error'));
-
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -22,7 +22,7 @@ export const App = () => {
     dispatch(refreshUser());
   }, [dispatch])
 
-  return (isRefreshing ? <p>Refreshing user...</p> : (
+  return (isRefreshing ? <Preloader /> : (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />

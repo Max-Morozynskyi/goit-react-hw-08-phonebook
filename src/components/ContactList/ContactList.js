@@ -29,8 +29,9 @@ export function ContactList() {
         }}
       />
       {contacts ? contacts.filter(item => item.name.includes(filterValue)).map(({ id, name, number }) => {
-        return <ContactItem id={id} name={name} number={number} />
-      }) : <>Sorry</>}
+        return <ContactItem key={id} id={id} name={name} number={number} />
+      }) : <li key='12346579'>Sorry</li>}
     </ul>
+
   );
 }

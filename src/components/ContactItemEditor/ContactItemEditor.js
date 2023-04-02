@@ -1,16 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createContact } from 'redux/contacts/operations';
+import { updateContact } from 'redux/contacts/operations';
 import { selectContacts } from 'redux/contacts/selectors';
-import { Button } from '@mui/material';
+import { IconButton } from '@mui/material';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import PropTypes from 'prop-types';
-import css from './ContactForm.module.css';
+import css from './ContactItemEditor.module.css'
 
-export const ContactForm = ({ closingFunc }) => {
+export const ContactItemEditor = ({ contactId, statusUpd }) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const dispatch = useDispatch();
-  const contacts = useSelector(selectContacts).map(a => a.name.toLowerCase());
+  const selectedContact = useSelector(selectContacts).find(contact => contact.id === contactId);
+  useEffect(() => {
+    setName(selectedContact.name);
+    setNumber(selectedContact.number);
+  }, [selectedContact])
 
   const registerTapping = evt => {
     const { name, value } = evt.currentTarget;
@@ -26,25 +31,15 @@ export const ContactForm = ({ closingFunc }) => {
     }
   };
 
-  const handleSubmit = evt => {
+  const handleSubmitUpd = evt => {
     evt.preventDefault();
-    const newContact = { name, number };
-    if (contacts.includes(name.toLowerCase())) {
-      alert(`${name} is already in your contacts!`);
-      return;
-    }
-    dispatch(createContact(newContact));
-    closingFunc(null);
-    setName('');
-    setNumber('');
+    const newContact = { contactId, name, number };
+    dispatch(updateContact(newContact));
+    statusUpd(false)
   };
 
   return (
-    <form className={css.formField} onSubmit={handleSubmit} >
-      <h3>Create new contact</h3>
-      <label className={css.formLabel} htmlFor="name">
-        Enter the name:{' '}
-      </label>
+    <form className={css.formField} onSubmit={handleSubmitUpd} >
       <input
         type="text"
         className={css.formInput}
@@ -56,9 +51,6 @@ export const ContactForm = ({ closingFunc }) => {
         title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
         required
       />
-      <label className={css.formLabel} htmlFor="number">
-        Enter the phone number:{' '}
-      </label>
       <input
         type="tel"
         className={css.formInput}
@@ -70,11 +62,14 @@ export const ContactForm = ({ closingFunc }) => {
         title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
         required
       />
-      <Button color="inherit" variant="outlined" type="submit" className={css.formSubmit}  >Add contact</Button>
+      <IconButton aria-label="submit" type="submit" size='small'>
+        <CheckCircleOutlineIcon fontSize="inherit" />
+      </IconButton>
     </form >
-  );
-};
+  )
+}
 
-ContactForm.propTypes = {
-  closingFunc: PropTypes.func.isRequired,
+ContactItemEditor.propTypes = {
+  contactId: PropTypes.string.isRequired,
+  statusUpd: PropTypes.func.isRequired,
 }

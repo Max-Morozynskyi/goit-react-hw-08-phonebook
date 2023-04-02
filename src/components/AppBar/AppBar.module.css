@@ -10,3 +10,7 @@
   padding: 5px 15px;
   box-shadow: rgba(33, 35, 38, 0.3) 0px 10px 10px -10px;
 }
+.header a {
+  color: inherit;
+  text-decoration: none;
+}

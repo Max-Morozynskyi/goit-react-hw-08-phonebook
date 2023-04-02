@@ -79,7 +79,8 @@ export const LogInForm = () => {
           <Button
             type="submit"
             fullWidth
-            variant="contained"
+            variant="outlined"
+            color='inherit'
             sx={{ mt: 3, mb: 2 }}
           >
             Login
