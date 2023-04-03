@@ -28,9 +28,11 @@ export function ContactList() {
           left: '10px',
         }}
       />
-      {contacts ? contacts.filter(item => item.name.includes(filterValue)).map(({ id, name, number }) => {
-        return <ContactItem key={id} id={id} name={name} number={number} />
-      }) : <li key='12346579'>Sorry</li>}
+      {contacts.length === 0
+        ? <p>Your Phonebook is empty! All contacts will be here.</p>
+        : contacts.filter(item => item.name.toLowerCase().includes(filterValue.toLowerCase())).map(({ id, name, number }) => {
+          return <ContactItem key={id} id={id} name={name} number={number} />
+        })}
     </ul>
 
   );
